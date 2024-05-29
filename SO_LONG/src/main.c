@@ -14,112 +14,40 @@
 
 int main(int argc, char **argv)
 {
-	t_game game;
+	t_game *game;
+	int fd;
 
+	game = NULL;
+	ckeck_params(argc, argv, &game);
+	fd = open(argv[1], O_RDONLY);
     init_game(&game);
-    if(argc == 1)
-        error(&game, "Missing map (./so_long maps/intra.ber)");
-    if(argc > 2)
-        error(&game, "Too many arguments");
-    parsing(&game, argv[1]);
-    // Aquí puedes continuar con la lógica de tu juego usando `map` y `game`
-	return (0);
+	if (fd == -1)
+		error();
+	game = malloc(sizeof(t_game));
+	if(!game)
+		error();
+	read_map(game);
+		return (0);
 }
 
 /* Esta función se asegura de que el programa se ejecute con el número correcto de argumentos
 y que el argumento adicional sea un archivo con la extensión .ber. */
 char **check_params(int argc, char **argv, t_game *game)
 {
-    int fl;
+	int fl;
 
-    if (argc != 2)
-    {
-        ft_putstr_fd("Error\nInvalid number of arguments\n", 2);
-        exit(1);
-    }
-    fl = ft_strlen(argv[1]);
-    if(ft_strrncmp(argv[1] + [fl - 4], ".ber", 4) == NULL)
-    {
-        ft_putstr_fd("Error\nInvalid file extension, use .ber!\n", 2);
-		close(fd);
-        exit(1);
-    }
+	if (argv != 2)
+		ft_error();
+	fl = ft_strlen(argv[1]);
+	if(ft_strrncmp(argv[1] + (fl - 4), ".ber", 4) == NULL)
+		ft_error();
 }
 
-void init_map(char **argv, t_game *game)
+void read_map(t_game *game)
 {
-    char *line;
-    int  i;
-
-    line = get_next_line(game->fd);
-    is_emtpy(line);
-    i = 0;
-    while(line && !line[0] == '\n')
-    {
-        if(i >= MAP_HEIGHT / IMG_HEIGHT)
-        {
-            ft_putstr_fd("Error\nInvalid map\n", 2);
-            exit(1);
-        }
-        if(gsmr->map.repo == NULL)
-        {
-            game->map.repo = ft_strdup(line);
-        }
-        else
-        {
-            game->map.repo = gnl_strjoin(game->map.repo, line);
-        }
-    }
-}
-
-void read_map(int fd, t_game *game)
-{
-	char *line;
-	int fd;
-	int ret;
-    int file;
-
-    file = 0;
-    fd = open(argv[1], O_RDONLY);
-    if(fd == -1)
-    {
-        ft_putstr_fd("Error\nInvalid file\n", 2);
-        exit(1);
-    }
-    ret = get_next_line(fd);
-    
-    while(line[first_index_valid(line)] == '1' || line[first_index_valid(line)] == '0')
-    {
-        game->cols = ft_strlen(line);
-        game->rows++;
-        free(line);
-        ret = get_next_line(fd);
-    }
-	while((line = get_next_line(fd)) != NULL)
-	{
-		if(cols == 0)
-		{
-			cols = ft_strlen(line);
-		}
-		else if((int)ft_strlen(line) != game->cols)
-		{
-			ft_putstr_fd("Error\nInvalid map\n", 2);
-			exit(1);
-		}
-		if(!check_line(line, game->cols))
-		{
-			ft_putstr_fd("Error\nInvalid map\n", 2);
-			exit(1);
-		}
-		rows++;
-		free(line);
-	}
-	if(cols == 0 || rows == 0)
-	{
-		ft_putstr_fd("Error\nInvalid map\n", 2);
-		exit(1);
-	}
-	close(fd);
+	check_rect_map(game);
+	check_components(game);
+	check_walls(game);
 }
 
 int map_size(int fd)
