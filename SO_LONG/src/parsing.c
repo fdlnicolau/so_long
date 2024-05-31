@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/so_long.h"
+/* #include "../inc/so_long.h"
 int parsing(t_game *game, char *argv)
 {
     verification_ber(*argv, *game);
@@ -18,11 +18,11 @@ int parsing(t_game *game, char *argv)
 
 }
 
-/*
+
 ** Función para obtener las dimensiones del mapa desde un archivo.
 ** Recibe un puntero a una estructura t_long y el nombre del archivo..
 */
-int get_map_dimensions(t_game *game, char *argv)
+/*int get_map_dimensions(t_game *game, char *argv)
 {
     int fd;
     char *current_line;
@@ -97,4 +97,4 @@ int verification_ber(char *str. t_game game)
     }
     error(&game, "Invalid file extension, use .ber!");
     return (1);
-}
+} */

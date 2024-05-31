@@ -6,7 +6,7 @@
 /*   By: lnicolau <lnicolau@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:04:14 by lnicolau          #+#    #+#             */
-/*   Updated: 2024/05/28 13:32:20 by lnicolau         ###   ########.fr       */
+/*   Updated: 2024/05/30 13:03:36 by lnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,21 @@ void check_components(t_game *game)
 		ft_error();
 }
 
+void ft_error()//hay que arreglarlo
+{
+	ft_putstr_fd("Error\n", 2);
+	exit(1);
+}
+
 void check_walls(t_game game)
 {
 	int rows;
 
-	rows =0
+	rows = 0;
 
-	while (game->map[0][1] != NULL)
-		rows++;
+	game.map = 0;
+
+/* 	while (game->map[0][1] != NULL)
+		rows++; */
 }
 

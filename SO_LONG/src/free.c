@@ -12,7 +12,7 @@
 
 #include "../inc/so_long.h"
 
-void free_map(t_game *game)
+/* void free_map(t_game *game)
 {
     int i;
 
@@ -24,4 +24,4 @@ void free_map(t_game *game)
     }
     free(game->map);
     game->map_to_free = 0;
-}
+} */

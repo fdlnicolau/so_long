@@ -11,14 +11,6 @@
 /* ************************************************************************** */
 
 #include "../inc/so_long.h"
-int first_index_valid(char *str)
-{
-    int index;
-    while(str[index] == ' ' || str[index] == '\t'
-         || str[index] == '\v' || str[index] == '\r')
-        index++;
-    return (index);
-}
 
 int count_comp(char **map, char c)
 {
@@ -40,4 +32,4 @@ int count_comp(char **map, char c)
 		i++;
 	}
 	return (count);
-}
+} 
