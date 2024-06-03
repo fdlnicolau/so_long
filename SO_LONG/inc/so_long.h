@@ -12,14 +12,12 @@
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-# include <libft.h>
+# include "../libft/libft.h"
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-#include "/sgoinfre/shared/MLX42/build/libmlx42.a"
 
 typedef struct s_game
 {
@@ -46,6 +44,6 @@ void    read_map(t_game *game, char *str);
 int     map_size(int fd);
 int     check_line(char *line, int cols);
 char    **check_params(int argc, char **argv, t_game *game);
-int     main(int argc, char **argv);
+void process_map_line(t_game *game, char *line);
 
 #endif

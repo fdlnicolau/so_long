@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 	final = ft_strdup (argv[1] + ft_strlen(argv[1]) - 4);
 	if(ft_strncmp(final, ".ber", 4) == 0)
 		ft_error();
-	read_map(&game., argv[1]);
+	read_map(&game, argv[1]);
 
 }
 
@@ -32,7 +32,8 @@ void read_map(t_game *game, char *str)
 	char *line;
 
 	fd = open(str, O_RDONLY);
-	while (get_next_line(fd, &line) > 0)
+	// norminette
+	while ((line = get_next_line(fd)) > 0)
 	{
 		process_map_line(game, line);
 		free(line);
@@ -48,8 +49,6 @@ void process_map_line(t_game *game, char *line)
 
 	row = game->rows;
 	len = ft_strlen(line);
-
-	if(row >= )
 }
 
 

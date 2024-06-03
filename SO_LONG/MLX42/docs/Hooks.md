@@ -8,7 +8,7 @@ See copyright and license notice in the root project for more information.
 Hooks allow you to add your own functions to the main loop execution of the program, aka these functions get executed every frame.
 They also serve to intercept certain keypresses such as scrolling or pressing enter.
 
-Only one hook can be set at a time! You cannot attach/have multiple hooks for specialized hooks.
+Only one hook can be set at a time! You cannot attach/have multiple specialized hooks.
 You can however have multiple generic hooks.
 
 ## Specialized Hooks
@@ -140,7 +140,7 @@ Generic hooks execute each frame and are useful for stuff that needs to be updat
  * @param[in] mlx The MLX instance handle.
  * @param[in] f The function.
  * @param[in] param The parameter to pass onto the function.
- * @returns Wether the hook was added successfuly. 
+ * @returns Wether the hook was added successfully. 
  */
 bool mlx_loop_hook(mlx_t* mlx, void (*f)(void*), void* param);
 ```
@@ -207,7 +207,7 @@ void my_scrollhook(double xdelta, double ydelta, void* param)
 	else if (ydelta < 0)
 		puts("Down!");
 	
-	// Can also detect a mousewheel that go along the X (e.g: MX Master 3)
+	// Can also detect a mousewheel that goes along the X (e.g: MX Master 3)
 	if (xdelta < 0)
 		puts("Sliiiide to the left!");
 	else if (xdelta > 0)
