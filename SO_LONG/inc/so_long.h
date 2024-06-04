@@ -21,29 +21,36 @@
 
 typedef struct s_game
 {
-    char **map;
-    int rows;
-    int cols;
-    int players;
-    int exit;
-    int collectibles;
-    int map_height; // Nueva variable para almacenar la altura del mapa
-    void *map_to_free; 
+	char **map;
+	int rows;
+	int cols;
+	int players;
+	int exit;
+	int collectibles;
+	int hgt;
+	int wth; 
+	void *map_to_free; 
 
 } t_game;
 
-void free_map(t_game *game);
-void check_walls(t_game game);
+//void free_map(t_game *game);
+void check_walls(t_game *game);
 void ft_error();
 void check_components(t_game *game);
+void check_components(t_game *game);
 void check_rect_map(t_game *game);
-int first_index_valid(char *str);
+int **init_visit(int hgt, int wth);
 int count_comp(char **map, char c);
-void    init_game(t_game *game);
+int count_comp(char **map, char c);
+int parsing(t_game *game, char *argv);
+//void    init_game(t_game *game);
+void start_check_path(t_game *game, int i, int j);
 void    read_map(t_game *game, char *str);
+void check_path(t_game *game, int i, int j, int **visit);
 int     map_size(int fd);
-int     check_line(char *line, int cols);
-char    **check_params(int argc, char **argv, t_game *game);
+//int     check_line(char *line, int cols);
+void check_collectibles(t_game *game, int **visit);
+//char    **check_params(int argc, char **argv, t_game *game);
 void process_map_line(t_game *game, char *line);
 
 #endif

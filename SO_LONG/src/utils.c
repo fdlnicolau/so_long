@@ -33,3 +33,22 @@ int count_comp(char **map, char c)
 	}
 	return (count);
 } 
+
+int **init_visit(int hgt, int wth)
+{
+	int i;
+	int **visit;
+
+	i = 0;
+	visit = (int **)malloc(sizeof(int *) * hgt);
+	if (visit == NULL)
+		ft_error();
+	while (i < hgt)
+	{
+		visit[i] = (int *)malloc(sizeof(int) * wth);
+		if (visit[i] == NULL)
+			ft_error();
+		i++;
+	}
+	return (visit);
+}

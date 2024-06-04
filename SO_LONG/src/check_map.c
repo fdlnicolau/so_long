@@ -6,7 +6,7 @@
 /*   By: lnicolau <lnicolau@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:04:14 by lnicolau          #+#    #+#             */
-/*   Updated: 2024/05/30 13:03:36 by lnicolau         ###   ########.fr       */
+/*   Updated: 2024/06/04 13:33:04 by lnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ void check_rect_map(t_game *game)
 		ft_error();
 	if(i < 3)
 		ft_error();
-	
+	game->wth = len;
+	game->hgt = i;
 }
 
 //Comprueba si el mapa contiene los componentes necesarios
@@ -74,15 +75,103 @@ void ft_error()//hay que arreglarlo
 	exit(1);
 }
 
-void check_walls(t_game game)
+void check_walls(t_game *game)
 {
-	int rows;
+	int	i;
+	size_t	j;
 
-	rows = 0;
+	j = 0;
+	i = 0;
 
-	game.map = 0;
+	while ( j < ft_strlen(game->map[0]))
+    {
+		j++;
+		if (game->map[0][j] != '1' || game->map[game->hgt - 1][j] != '1')
+			ft_error();
+	}
 
-/* 	while (game->map[0][1] != NULL)
-		rows++; */
+	while( i < game->hgt)
+    {
+		i++;
+        if (game->map[i][0] != '1' || game->map[i][game->wth - 1] != '1')
+            ft_error();
+    }
 }
 
+void start_check_path(t_game *game, int i, int j)
+{
+	int **visit;
+	visit = init_visit(game->hgt, game->wth);
+
+	while(i < game->hgt)
+	{
+		j = 0;
+		while(j < game->wth)
+		{
+			if (game->map[i][j] == 'P')
+				check_path(game, i, j, visit);
+			j++;
+		}
+		i++;
+	}
+	if (!game->exit)
+		ft_error();
+	i = 0;
+	while(i < game->hgt)
+	{
+		free(visit[i]);
+		i++;
+	}
+	free(visit);
+}
+
+void check_path(t_game *game, int i, int j, int **visit)
+{
+	if (i < 0 || i >= game->hgt || j < 0 || j >= game->wth
+		|| visit[i][j] || game->map[i][j] == '1')
+		return;
+
+    // Marcar la posición actual como visitada
+	visit[i][j] = 1;
+
+    // Si la posición actual es el punto de salida, marcar que se encontró un camino y retornar
+	if (game->map[i][j] == 'E')
+	{
+		game->exit = 1;
+		return;
+	}
+
+    // Continuar la búsqueda en las posiciones adyacentes
+	check_path(game, i - 1, j, visit); // arriba
+	check_path(game, i + 1, j, visit); // abajo
+	check_path(game, i, j - 1, visit); // izquierda
+	check_path(game, i, j + 1, visit); // derecha
+}
+
+
+void check_collectibles(t_game *game, int **visit)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while(i < game->hgt)
+	{
+		j = 0;
+		while(j < game->wth)
+		{
+			if (game->map[i][j] == 'C' && visit[i][j] == 1)
+			{
+				game->collectibles--;
+				if (game->collectibles == 0)
+				{
+					game->exit = 1;
+					return;
+				}
+			}
+			j++;
+		}
+		i++;
+	}
+}

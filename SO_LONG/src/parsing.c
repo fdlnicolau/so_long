@@ -10,18 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/* #include "../inc/so_long.h"
+#include "../inc/so_long.h"
 int parsing(t_game *game, char *argv)
 {
-    verification_ber(*argv, *game);
-    get_map_dimensions(*argv, *game);
+	size_t i;
+	size_t j;
+	int **visit;
 
+	i = 0;
+	j = 0; 
+	check_rect_map(game);
+	check_components(game);
+	check_walls(game);
+	visit = start_check_path(game, i, j);
+	check_collectibles(game, visit);
 }
 
 
-** Función para obtener las dimensiones del mapa desde un archivo.
-** Recibe un puntero a una estructura t_long y el nombre del archivo..
-*/
 /*int get_map_dimensions(t_game *game, char *argv)
 {
     int fd;
