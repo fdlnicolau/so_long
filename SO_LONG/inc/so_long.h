@@ -44,7 +44,7 @@ int count_comp(char **map, char c);
 int count_comp(char **map, char c);
 int parsing(t_game *game, char *argv);
 //void    init_game(t_game *game);
-void start_check_path(t_game *game, int i, int j);
+int	**start_check_path(t_game *game, int i, int j);
 void    read_map(t_game *game, char *str);
 void check_path(t_game *game, int i, int j, int **visit);
 int     map_size(int fd);

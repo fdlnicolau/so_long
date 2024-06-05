@@ -6,7 +6,7 @@
 /*   By: lnicolau <lnicolau@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:04:14 by lnicolau          #+#    #+#             */
-/*   Updated: 2024/06/04 13:33:04 by lnicolau         ###   ########.fr       */
+/*   Updated: 2024/06/05 11:53:07 by lnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,21 +84,21 @@ void check_walls(t_game *game)
 	i = 0;
 
 	while ( j < ft_strlen(game->map[0]))
-    {
-		j++;
+	{
 		if (game->map[0][j] != '1' || game->map[game->hgt - 1][j] != '1')
 			ft_error();
+		j++;
 	}
 
 	while( i < game->hgt)
-    {
+	{
+		if (game->map[i][0] != '1' || game->map[i][game->wth - 1] != '1')
+			ft_error();
 		i++;
-        if (game->map[i][0] != '1' || game->map[i][game->wth - 1] != '1')
-            ft_error();
-    }
+	}
 }
 
-void start_check_path(t_game *game, int i, int j)
+int **start_check_path(t_game *game, int i, int j)
 {
 	int **visit;
 	visit = init_visit(game->hgt, game->wth);
@@ -116,13 +116,14 @@ void start_check_path(t_game *game, int i, int j)
 	}
 	if (!game->exit)
 		ft_error();
+		
 	i = 0;
 	while(i < game->hgt)
 	{
 		free(visit[i]);
 		i++;
 	}
-	free(visit);
+	return(visit);
 }
 
 void check_path(t_game *game, int i, int j, int **visit)
@@ -131,7 +132,6 @@ void check_path(t_game *game, int i, int j, int **visit)
 		|| visit[i][j] || game->map[i][j] == '1')
 		return;
 
-    // Marcar la posición actual como visitada
 	visit[i][j] = 1;
 
     // Si la posición actual es el punto de salida, marcar que se encontró un camino y retornar

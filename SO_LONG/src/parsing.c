@@ -17,6 +17,7 @@ int parsing(t_game *game, char *argv)
 	size_t j;
 	int **visit;
 
+	(void)argv;
 	i = 0;
 	j = 0; 
 	check_rect_map(game);
@@ -24,6 +25,7 @@ int parsing(t_game *game, char *argv)
 	check_walls(game);
 	visit = start_check_path(game, i, j);
 	check_collectibles(game, visit);
+	return (0);
 }
 
 

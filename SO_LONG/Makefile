@@ -11,7 +11,8 @@ MLX_SRC     =   MLX42
 SRC_FILES   =   main.c \
 				free.c \
 				check_map.c \
-				utils.c
+				utils.c \
+				parsing.c
 
 OBJ			=	$(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
 
