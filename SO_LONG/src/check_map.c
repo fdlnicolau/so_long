@@ -6,12 +6,77 @@
 /*   By: lnicolau <lnicolau@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:04:14 by lnicolau          #+#    #+#             */
-/*   Updated: 2024/06/05 11:53:07 by lnicolau         ###   ########.fr       */
+/*   Updated: 2024/06/07 16:14:40 by lnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/so_long.h"
 
+void read_map(t_game *game, char *str)
+{
+	int fd;
+	char * lines;
+
+	fd = open(str, O_RDONLY);
+	lines = reading(fd);
+	close(fd);
+	preparation_map(game, lines);
+	//parsing(game, str);
+	free(lines);
+}
+char *reading(int fd)
+{
+	char *line;
+	char *tmp;
+	char *linetotal;
+
+	allocate_grid_memory(game);
+	fd = open_file(argv);
+	line = get_next_line(fd);
+	while (line)
+	{
+		copy_line(game, line, i);
+		j = 0;
+		while (j < game->map.width)
+		{
+			check_map_content(game, game->map.grid[i][j], i, j);
+			j++;
+		}
+		free(line);
+		line = get_next_line(fd);
+		i++;
+	}
+	game->map.grid[i] = NULL;
+	write(1,"pepa", 4);
+	return(linetotal);
+}
+
+void preparation_map(t_game *game, char *line)
+{
+	char **map;
+	int i;
+
+	i  = 0;
+	game->map = malloc(sizeof(char*) * (game->rows + 1));
+	if (game->map == NULL)
+		ft_error();
+	map = ft_split(line, '\n');
+	while(map[i] != NULL)
+	{
+		game->map[i] = ft_strdup(map[i]);
+		if(game->map[i] == NULL)
+			ft_error();
+		i++;
+	}
+	game->map[i] = NULL;
+	i = 0;
+	while (map[i] != NULL)
+	{
+		free(map[i]);
+		i++;
+	}
+	free(map);
+}
 //Comprueba si el mapa es rectangular
 void check_rect_map(t_game *game)
 {
@@ -126,7 +191,7 @@ int **start_check_path(t_game *game, int i, int j)
 	return(visit);
 }
 
-void check_path(t_game *game, int i, int j, int **visit)
+void check_path(t_game *game, int i, int j, int **visit)//flufli
 {
 	if (i < 0 || i >= game->hgt || j < 0 || j >= game->wth
 		|| visit[i][j] || game->map[i][j] == '1')

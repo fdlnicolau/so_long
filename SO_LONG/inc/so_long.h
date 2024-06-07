@@ -33,6 +33,15 @@ typedef struct s_game
 
 } t_game;
 
+
+
+//CHECK_MAP
+void check_map(char *str, t_game *game);
+void read_map(t_game *game, char *str);
+char *reading(int fd);
+void preparation_map(t_game *game, char *line);
+void parsing(t_game *game, char *argv);
+
 //void free_map(t_game *game);
 void check_walls(t_game *game);
 void ft_error();
@@ -42,7 +51,7 @@ void check_rect_map(t_game *game);
 int **init_visit(int hgt, int wth);
 int count_comp(char **map, char c);
 int count_comp(char **map, char c);
-int parsing(t_game *game, char *argv);
+//int parsing(t_game *game, char *argv);
 //void    init_game(t_game *game);
 int	**start_check_path(t_game *game, int i, int j);
 void    read_map(t_game *game, char *str);

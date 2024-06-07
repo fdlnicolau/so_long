@@ -15,75 +15,25 @@
 int main(int argc, char **argv) 
 {
 	t_game game;
+
+	if(argc == 2)
+	{
+		check_map(argv[1], &game);
+		free(game.map);
+	}
+
+}
+
+void check_map(char *str, t_game *game)
+{
 	char *final;
 
-	if(argc != 2)
-		ft_error();
-	final = ft_strdup (argv[1] + ft_strlen(argv[1]) - 4);
+	final = ft_strdup (str + ft_strlen(str) - 4);
 	if(ft_strncmp(final, ".ber", 4))
 		ft_error();
-	read_map(&game, argv[1]);
-
-}
-// con get_next_line leeremos linea a linea el archivo y juntamos en un string con strjoin
-// luego dividimos el string en un array de strings con ft_split
-void read_map(t_game *game, char *str)
-{
-	int fd;
-	char *line;
-	char *linetotal;
-	char *temp;
-
-	linetotal = NULL;
-	fd = open(str, O_RDONLY);
-	line = get_next_line(fd);
-	while(line != NULL)
-	{
-		temp = linetotal;
-		linetotal = ft_strjoin(linetotal, line);
-		if(line == NULL)
-		{
-			free(temp);
-			free(line);
-			ft_error();
-			return;
-		}
-		free(temp);
-		free(line);
-		line = get_next_line(fd);
-	}
-	close(fd);
-	process_map_line(game, linetotal);
-	parsing(game, str);
-	free(linetotal);
+	read_map(game, str);
 }
 
-void process_map_line(t_game *game, char *line)
-{
-	char **map;
-	int i;
-
-	i  = 0;
-	game->map = malloc(sizeof(char*) * (game->rows + 1));
-	if (game->map == NULL)
-		ft_error();
-	map = ft_split(line, '\n');
-	while(map[i] != NULL)
-	{
-		game->map[i] = ft_strdup(map[i]);
-		if(game->map[i] == NULL)
-			ft_error();
-		i++;
-	}
-	game->map[i] = NULL;
-	i = 0;
-	while (map[i] != NULL)
-	{
-		free(map[i]);
-		i++;
-	}
-	free(map);
-}
 
 
 //* * Esta función se asegura de que el programa se ejecute con el número correcto de argumentos
