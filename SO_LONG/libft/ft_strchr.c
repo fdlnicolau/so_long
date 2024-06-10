@@ -13,14 +13,17 @@
 // de una string apenas encuentre una coincidencia te devuelve el resto
 #include "libft.h"
 
-char	*ft_strchr(const char *str, int c)
+char	*ft_strchr(const char *s, int c)
 {
-	int	i;
-
-	i = 0;
-	while (str[i] != (char)c && str[i] != '\0')
-		i++;
-	if (str[i] == (char)c)
-		return ((char *)&str[i]);
+	if (!s)
+		return (0);
+	while (*s)
+	{
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
+	}
+	if (*s == (char)c)
+		return ((char *)s);
 	return (0);
 }

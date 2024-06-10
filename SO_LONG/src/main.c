@@ -14,14 +14,34 @@
 
 int main(int argc, char **argv) 
 {
-	t_game game;
+	t_game  game;
 
+    game_init(&game);
 	if(argc == 2)
 	{
 		check_map(argv[1], &game);
-		free(game.map);
+        game_control(&game);
 	}
+	free_game(&game);
+	return (0);
 
+}
+
+void free_game(t_game *game) 
+{
+    if (game->map) 
+	{
+		free_map(game);
+    }
+}
+
+t_game *game_memory_init(t_game **game)
+{
+	*game = malloc(sizeof(t_game));
+	if (*game == NULL)
+		ft_error("Failed to allocate memory for the game");
+	(*game)->map = NULL;
+	return (*game);
 }
 
 void check_map(char *str, t_game *game)
@@ -29,9 +49,35 @@ void check_map(char *str, t_game *game)
 	char *final;
 
 	final = ft_strdup (str + ft_strlen(str) - 4);
+	if (final == NULL)
+    {
+        ft_putstr_fd("Error: Memory allocation failed\n", 2);
+        exit(EXIT_FAILURE);
+    }
 	if(ft_strncmp(final, ".ber", 4))
-		ft_error();
+    {
+        ft_putstr_fd("Error\nInvalid file extension\n", 2);
+		free(final);
+        exit(EXIT_FAILURE);
+    }
 	read_map(game, str);
+	free(final);
+}
+
+int free_map(t_game *game)
+{
+	int i;
+
+	i = 0;
+	while (game->map[i])
+	{
+		free(game->map[i]);
+		game->map[i] = NULL;
+		i++;
+	}
+	free(game->map);
+	game->map = NULL;
+	return (0);
 }
 
 

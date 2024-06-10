@@ -6,76 +6,136 @@
 /*   By: lnicolau <lnicolau@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 13:04:14 by lnicolau          #+#    #+#             */
-/*   Updated: 2024/06/07 16:14:40 by lnicolau         ###   ########.fr       */
+/*   Updated: 2024/06/10 20:02:01 by lnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/so_long.h"
 
+int map_size(int fd)
+{
+    char *line;
+    int size;
+
+    size = 0;
+    while((line = get_next_line(fd)) != NULL)
+    {
+        size++;
+        free(line);
+    }
+    return (size);
+}
+
 void read_map(t_game *game, char *str)
 {
 	int fd;
-	char * lines;
 
 	fd = open(str, O_RDONLY);
-	lines = reading(fd);
+	if (fd == -1)
+		ft_error("Error opening file");
+	game->hgt = map_size(fd);
 	close(fd);
-	preparation_map(game, lines);
-	//parsing(game, str);
-	free(lines);
+	fd = open(str, O_RDONLY);
+	preparation_map(game);
+	reading(fd, game);
+	close(fd);
+	parsing(game, str);
 }
-char *reading(int fd)
+char *reading(int fd, t_game *game)
 {
 	char *line;
-	char *tmp;
-	char *linetotal;
+	int wth;
+	int i;
+	int j;
 
-	allocate_grid_memory(game);
-	fd = open_file(argv);
+	i = 0;
 	line = get_next_line(fd);
+	if(line == NULL)
+		ft_error("Empty file");
 	while (line)
 	{
 		copy_line(game, line, i);
 		j = 0;
-		while (j < game->map.width)
+		wth = ft_strlen(line);
+		while (j < wth)
 		{
-			check_map_content(game, game->map.grid[i][j], i, j);
+			check_map_content(game, game->map[i][j], i, j);
 			j++;
 		}
 		free(line);
 		line = get_next_line(fd);
 		i++;
 	}
-	game->map.grid[i] = NULL;
-	write(1,"pepa", 4);
-	return(linetotal);
+	game->map[i] = NULL;
+	check_status(game);
+	return NULL;
 }
 
-void preparation_map(t_game *game, char *line)
+void check_status(t_game *game)
 {
-	char **map;
-	int i;
+	if(!game->players)
+		ft_error("Player not found");
+	if(!game->exit)
+		ft_error("Exit not found");
+	if(game->collectibles == 0)
+		ft_error("Collectibles not found");
+}
 
-	i  = 0;
-	game->map = malloc(sizeof(char*) * (game->rows + 1));
-	if (game->map == NULL)
-		ft_error();
-	map = ft_split(line, '\n');
-	while(map[i] != NULL)
+void copy_line(t_game *game, char *line, int i)
+{
+	int j;
+
+	j = 0;
+	game->map[i] = malloc(sizeof(char) * (strlen(line) + 1));
+	if (!game->map[i])
 	{
-		game->map[i] = ft_strdup(map[i]);
-		if(game->map[i] == NULL)
-			ft_error();
-		i++;
+    	perror("Failed to allocate memory for game->map[i]");
+    	exit(EXIT_FAILURE);
 	}
-	game->map[i] = NULL;
-	i = 0;
-	while (map[i] != NULL)
+	while (line[j] != '\0' && line[j] != '\n' && line[j] != '\r')
 	{
-		free(map[i]);
-		i++;
+		game->map[i][j] = line[j];
+		j++;
 	}
-	free(map);
+	game->map[i][j] = '\0';
+}
+void check_map_content(t_game *game, char cell, int i, int j) 
+{
+if (cell == 'P')
+	{
+		if (game->players == 0)
+		{
+			game->player_x = j;
+			game->player_y = i;
+			game->players = 1;
+		}
+		else
+		{
+			ft_error("Multiple players found");
+		}
+	}
+	else if (cell == 'C')
+		game->collectibles += 1;
+	else if (cell == 'E')
+	{
+		if (game->exit == 0)
+			game->exit = 1;
+		else
+			ft_error("Multiple exits found");
+	}
+	else if (cell != '1' && cell != '0' && cell != '\n' && cell != '\r' && cell != '\0') // Validación adicional de celdas
+		ft_error("Unexpected cell character");
+}
+
+
+void preparation_map(t_game *game)
+{
+	game->map = malloc(sizeof(char *) * (game->hgt + 1));
+	if (!game->map)
+	{
+	    perror("Failed to allocate memory for map");
+    	exit(EXIT_FAILURE);
+	}
 }
 //Comprueba si el mapa es rectangular
 void check_rect_map(t_game *game)
@@ -86,23 +146,19 @@ void check_rect_map(t_game *game)
 
 	i = 0;
 	len = ft_strlen(game->map[0]);
-	if(ft_strlen(game->map[i]) <= 1)
-		ft_error();
 	if(ft_strlen(game->map[0]) < 3)
-		ft_error();
+		ft_error("Ocurrió un error");
 	while (game->map[i] != NULL)
 	{
 		j = 0;
 		while (game->map[i][j] != '\0')
 			j++;
 		if (j != len)
-			ft_error();
+			ft_error("Bad line length");
 		i++;
 	}
-	if(i == 0)
-		ft_error();
 	if(i < 3)
-		ft_error();
+		ft_error("Map too small");
 	game->wth = len;
 	game->hgt = i;
 }
@@ -112,6 +168,7 @@ void check_components(t_game *game)
 {
 	int i;
 	int j;
+	char valid_chars[] = "10CEP";
 
 
 	i = 0;
@@ -120,24 +177,18 @@ void check_components(t_game *game)
 		j = 0;
 		while (game->map[i][j] != '\0')
 		{
-			if (ft_strchr("10CEP", game->map[i][j]) == NULL)
-				ft_error();
+			if (game->map[i][j] != '\0' && ft_strchr(valid_chars, game->map[i][j]) == NULL)
+				ft_error("Ocurrió un error");
 			j++;
 		}
 		i++;
 	}
 	if (count_comp(game->map, 'P') != 1)
-		ft_error();
+		ft_error("Ocurrió un error");
 	if(count_comp(game->map, 'E') != 1)
-		ft_error();
+		ft_error("Ocurrió un error");
 	if(count_comp(game->map, 'C') == 0)
-		ft_error();
-}
-
-void ft_error()//hay que arreglarlo
-{
-	ft_putstr_fd("Error\n", 2);
-	exit(1);
+		ft_error("Ocurrió un error");
 }
 
 void check_walls(t_game *game)
@@ -151,14 +202,14 @@ void check_walls(t_game *game)
 	while ( j < ft_strlen(game->map[0]))
 	{
 		if (game->map[0][j] != '1' || game->map[game->hgt - 1][j] != '1')
-			ft_error();
+			ft_error("Ocurrió un error");
 		j++;
 	}
 
 	while( i < game->hgt)
 	{
-		if (game->map[i][0] != '1' || game->map[i][game->wth - 1] != '1')
-			ft_error();
+		if (game->map[i][0] != '1' || game->map[i][j - 1] != '1')
+			ft_error("Ocurrió un error");
 		i++;
 	}
 }
@@ -180,7 +231,7 @@ int **start_check_path(t_game *game, int i, int j)
 		i++;
 	}
 	if (!game->exit)
-		ft_error();
+		ft_error("Ocurrió un error");
 		
 	i = 0;
 	while(i < game->hgt)
@@ -198,6 +249,8 @@ void check_path(t_game *game, int i, int j, int **visit)//flufli
 		return;
 
 	visit[i][j] = 1;
+	if (game->map[i][j] == '1')
+        return;
 
     // Si la posición actual es el punto de salida, marcar que se encontró un camino y retornar
 	if (game->map[i][j] == 'E')
@@ -229,11 +282,6 @@ void check_collectibles(t_game *game, int **visit)
 			if (game->map[i][j] == 'C' && visit[i][j] == 1)
 			{
 				game->collectibles--;
-				if (game->collectibles == 0)
-				{
-					game->exit = 1;
-					return;
-				}
 			}
 			j++;
 		}

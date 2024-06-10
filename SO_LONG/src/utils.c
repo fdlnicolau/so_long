@@ -42,12 +42,12 @@ int **init_visit(int hgt, int wth)
 	i = 0;
 	visit = (int **)malloc(sizeof(int *) * hgt);
 	if (visit == NULL)
-		ft_error();
+		ft_error("error");
 	while (i < hgt)
 	{
 		visit[i] = (int *)malloc(sizeof(int) * wth);
 		if (visit[i] == NULL)
-			ft_error();
+			ft_error("error");
 		i++;
 	}
 	return (visit);

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../inc/so_long.h"
+
 int parsing(t_game *game, char *argv)
 {
 	size_t i;
@@ -19,7 +20,7 @@ int parsing(t_game *game, char *argv)
 
 	(void)argv;
 	i = 0;
-	j = 0; 
+	j = 0;
 	check_rect_map(game);
 	check_components(game);
 	check_walls(game);
@@ -28,7 +29,11 @@ int parsing(t_game *game, char *argv)
 	return (0);
 }
 
-
+void ft_error(const char *msg)
+{
+    perror(msg);
+    exit(EXIT_FAILURE);
+}
 /*int get_map_dimensions(t_game *game, char *argv)
 {
     int fd;
