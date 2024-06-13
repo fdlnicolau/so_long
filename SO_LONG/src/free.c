@@ -43,6 +43,15 @@ void ft_clean_image(t_game *game)
 		mlx_delete_image(game->mlx, game->str);
 }
 
+void close_window(t_game *game)
+{
+	if (game->mlx)
+	{
+		mlx_terminate(game->mlx);
+		game->mlx = NULL;
+	}
+	exit(0);
+}
 void free_map(t_game *game)
 {
 	int i;

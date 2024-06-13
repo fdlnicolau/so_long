@@ -38,7 +38,7 @@ void	update_player_position(t_game *game, int new_x, int new_y)
 		return ;
 	if (cell == 'C')
 	{
-		game->map[new_y][new_x] != '1';
+		game->map[new_y][new_x] = '1';
 		game->collectibles--;
 		if (game->collectibles == 0)
 			game->exit = 1;
@@ -67,30 +67,34 @@ void render_game_state(t_game *game)
 
 	y = 0;
 	x = 0;
-	mlx_clear_window(game->mlx, game->win_ptr);
+	clear_window(game->mlx, game->window);
 	while(y < game->hgt)
 	{
-		y++;
 		while(x < game->wth)
 		{
-			x++;
 			if (game->map[y][x] == '1')
-				mlx_put_image_to_window(game->mlx, game->win_ptr, game->wall.img, x * 64, y * 64);
-			if (game->map[y][x] == '0')
-				mlx_put_image_to_window(game->mlx, game->win_ptr, game->floor.img, x * 64, y * 64);
-			if (game->map[y][x] == 'P')
-				mlx_put_image_to_window(game->mlx, game->win_ptr, game->player.img, x * 64, y * 64);
-			if (game->map[y][x] == 'E')
-				mlx_put_image_to_window(game->mlx, game->win_ptr, game->exit.img, x * 64, y * 64);
-			if (game->map[y][x] == 'C')
-				mlx_put_image_to_window(game->mlx, game->win_ptr, game->collectible.img, x * 64, y * 64);
+				mlx_image_to_window(game->mlx, game->wall_img, x * 64, y * 64);
+			else if (game->map[y][x] == '0')
+				mlx_image_to_window(game->mlx, game->floor_img, x * 64, y * 64);
+			else if (game->map[y][x] == 'P')
+				mlx_image_to_window(game->mlx, game->player_img, x * 64, y * 64);
+			else if (game->map[y][x] == 'E')
+				mlx_image_to_window(game->mlx, game->exit_img, x * 64, y * 64);
+			else if (game->map[y][x] == 'C')
+				mlx_image_to_window	(game->mlx, game->collect_img, x * 64, y * 64);
+			x++;	
 		}
+		y++;
 	}
 }
 
+void clear_window()
+{
+
+}
 void game_loop(t_game *game)
 {
-	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, init_key_hook, game);
-	mlx_hook(game->win_ptr, DestroyNotify, StructureNotifyMask, close_window, game);
+	mlx_hook(game->window, KeyPress, KeyPressMask, init_key_hook, game);
+	mlx_hook(game->window, DestroyNotify, StructureNotifyMask, close_window, game);
 	mlx_loop(game->mlx);
 }

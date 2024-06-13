@@ -19,12 +19,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <X11/X.h>
+#include <X11/keysym.h>
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 #define S 64
 #define EXTENSION_NO_BER -1
-#define MAP_ERROR -3
+#define MAP_NOT_CORRECT -3
+#define END_OF_PROGRAM 0
 
 
 #define UP 0
@@ -63,7 +66,7 @@ typedef struct s_game
 	int exit_width;
 	int player_height;
 	int player_width;
-	int *player_ps;
+	int player_ps[2];
 	int player_exit;
 	int wall_height;
 	int wall_width;
@@ -76,11 +79,23 @@ typedef struct s_game
 	char *temp;
 } t_game;
 
-void render_game_state(t_game *game);
+void close_window(t_game *game);
 void game_loop(t_game *game);
+void render_game_state(t_game *game);
+void	ft_pain_colect(t_game *g);
+void	ft_open_exit(t_game *g);
+void ft_exit_free(int nb_error, t_game *game);
+void right_left_key(mlx_key_data_t keydata, t_game *g);
+void up_down_key(mlx_key_data_t keydata, t_game *g);
+void pos_player(t_game *g);
+void free_map(t_game *game);
+void	calculate_new_position(t_game *game, int direction, int	*new_x, int	*new_y);
+void	update_player_position(t_game *game, int new_x, int new_y);
 void	move_player(t_game *game, int direction);
+void render_game_state(t_game *game);
+void ft_clean_image(t_game *game);
+void game_loop(t_game *game);
 void	init_key_hook(mlx_key_data_t keydata, void *game);
-int free_map(t_game *game);
 void game_init(t_game *game);
 void texture_to_img(t_game *game);
 void load_png(t_game *game);
@@ -92,7 +107,6 @@ void game_control(t_game *game);
 void    ft_error(const char *str);
 void free_game(t_game *game) ;
 t_game *game_memory_init(t_game **game);
-void check_components(t_game *game);
 void preparation_map(t_game *game);
 void check_map_content(t_game *game, char cell, int i, int j);
 void copy_line(t_game *game, char *line, int i);
@@ -105,15 +119,12 @@ char *reading(int fd, t_game *game);
 //void free_map(t_game *game);
 void check_walls(t_game *game);
 void check_components(t_game *game);
-void check_components(t_game *game);
 void check_rect_map(t_game *game);
 int **init_visit(int hgt, int wth);
-int count_comp(char **map, char c);
 int count_comp(char **map, char c);
 int parsing(t_game *game, char *argv);
 //void    init_game(t_game *game);
 int	**start_check_path(t_game *game, int i, int j);
-void    read_map(t_game *game, char *str);
 void check_path(t_game *game, int i, int j, int **visit);
 int     map_size(int fd);
 //int     check_line(char *line, int cols);
