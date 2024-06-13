@@ -33,6 +33,11 @@ void free_game(t_game *game)
 	{
 		free_map(game);
     }
+    if(game->mlx)
+    {
+        mlx_terminate(game->mlx);
+        free(game->mlx);
+    }
 }
 
 t_game *game_memory_init(t_game **game)

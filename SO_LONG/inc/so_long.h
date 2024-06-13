@@ -39,6 +39,7 @@ typedef struct s_game
 	int hgt;
 	int wth; 
 	void *map_to_free; 
+	void *window;
 	int player_x;
 	int player_y;
 	mlx_texture_t *floor_tex;
@@ -68,7 +69,9 @@ typedef struct s_game
 
 } t_game;
 
-void	ft_move(t_game *game, int direction, int y, int x);
+void render_game_state(t_game *game);
+void game_loop(t_game *game);
+void	move_player(t_game *game, int direction)
 void key_hook(mlx_key_data_t keydata, t_game *data);
 void	init_key_hook(mlx_key_data_t keydata, void *game);
 int free_map(t_game *game);

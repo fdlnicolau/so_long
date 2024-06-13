@@ -1,7 +1,7 @@
-/home/lnicolau/Desktop/so_long/SO_LONG/MLX42/CMakeFiles/mlx42.dir
-/home/lnicolau/Desktop/so_long/SO_LONG/MLX42/CMakeFiles/edit_cache.dir
-/home/lnicolau/Desktop/so_long/SO_LONG/MLX42/CMakeFiles/rebuild_cache.dir
-/home/lnicolau/Desktop/so_long/SO_LONG/MLX42/CMakeFiles/list_install_components.dir
-/home/lnicolau/Desktop/so_long/SO_LONG/MLX42/CMakeFiles/install.dir
-/home/lnicolau/Desktop/so_long/SO_LONG/MLX42/CMakeFiles/install/local.dir
-/home/lnicolau/Desktop/so_long/SO_LONG/MLX42/CMakeFiles/install/strip.dir
+/mnt/c/Users/leila/OneDrive/Escritorio/Nueva carpeta (3)/so_long/SO_LONG/MLX42/CMakeFiles/mlx42.dir
+/mnt/c/Users/leila/OneDrive/Escritorio/Nueva carpeta (3)/so_long/SO_LONG/MLX42/CMakeFiles/edit_cache.dir
+/mnt/c/Users/leila/OneDrive/Escritorio/Nueva carpeta (3)/so_long/SO_LONG/MLX42/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/leila/OneDrive/Escritorio/Nueva carpeta (3)/so_long/SO_LONG/MLX42/CMakeFiles/list_install_components.dir
+/mnt/c/Users/leila/OneDrive/Escritorio/Nueva carpeta (3)/so_long/SO_LONG/MLX42/CMakeFiles/install.dir
+/mnt/c/Users/leila/OneDrive/Escritorio/Nueva carpeta (3)/so_long/SO_LONG/MLX42/CMakeFiles/install/local.dir
+/mnt/c/Users/leila/OneDrive/Escritorio/Nueva carpeta (3)/so_long/SO_LONG/MLX42/CMakeFiles/install/strip.dir
