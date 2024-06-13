@@ -27,18 +27,6 @@ int main(int argc, char **argv)
 
 }
 
-void free_game(t_game *game) 
-{
-    if (game->map) 
-	{
-		free_map(game);
-    }
-    if(game->mlx)
-    {
-        mlx_terminate(game->mlx);
-        free(game->mlx);
-    }
-}
 
 t_game *game_memory_init(t_game **game)
 {

@@ -22,6 +22,10 @@
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
+#define S 64
+#define EXTENSION_NO_BER -1
+#define MAP_ERROR -3
+
 
 #define UP 0
 #define DOWN 1
@@ -59,20 +63,22 @@ typedef struct s_game
 	int exit_width;
 	int player_height;
 	int player_width;
+	int *player_ps;
+	int player_exit;
 	int wall_height;
 	int wall_width;
 	int collect_height;
 	int collect_width;
 	mlx_t *mlx;
 	mlx_texture_t *collect_tex;
-
-
+	int steps;
+	mlx_image_t *str;
+	char *temp;
 } t_game;
 
 void render_game_state(t_game *game);
 void game_loop(t_game *game);
-void	move_player(t_game *game, int direction)
-void key_hook(mlx_key_data_t keydata, t_game *data);
+void	move_player(t_game *game, int direction);
 void	init_key_hook(mlx_key_data_t keydata, void *game);
 int free_map(t_game *game);
 void game_init(t_game *game);
