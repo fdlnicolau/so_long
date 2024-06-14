@@ -16,10 +16,11 @@ void	init_key_hook(mlx_key_data_t keydata, void *param)
 {
 	t_game *g;
 
-	g = (t_game *) param;
-	pos_player(g);
+	g = (t_game *) param;;
 	up_down_key(keydata, g);
 	right_left_key(keydata, g);
+	//move_player(g);
+	pos_player(g);
 	mlx_delete_image(g->mlx, g->str);
 	g->temp = ft_itoa(g->steps);
 	g->str = mlx_put_string(g->mlx, g->temp, g->wth * S - 32, g->hgt * S - 20);

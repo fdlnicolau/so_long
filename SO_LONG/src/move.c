@@ -67,7 +67,6 @@ void render_game_state(t_game *game)
 
 	y = 0;
 	x = 0;
-	clear_window(game->mlx, game->window);
 	while(y < game->hgt)
 	{
 		while(x < game->wth)
@@ -86,15 +85,4 @@ void render_game_state(t_game *game)
 		}
 		y++;
 	}
-}
-
-void clear_window()
-{
-
-}
-void game_loop(t_game *game)
-{
-	mlx_hook(game->window, KeyPress, KeyPressMask, init_key_hook, game);
-	mlx_hook(game->window, DestroyNotify, StructureNotifyMask, close_window, game);
-	mlx_loop(game->mlx);
 }

@@ -23,7 +23,7 @@ void free_game(t_game *game)
 	{
 		mlx_terminate(game->mlx);
 		free(game->mlx);
-		exit(write(1, "\n[FIN_DE_PROGRAMA]\n\n", 21));
+		exit(write(1, "\n[END_OF_PROGRAM]\n\n", 21));
 	}
 }
 

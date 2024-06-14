@@ -20,6 +20,7 @@ void game_control(t_game *game)
 	load_image(game);
 	mlx_key_hook(game->mlx, &init_key_hook, game);
 	mlx_loop(game->mlx);
+	
 }
 
 void load_image(t_game *game)
@@ -27,8 +28,9 @@ void load_image(t_game *game)
 	load_png(game);
 	texture_to_img(game);
 	img_to_window(game);
-	load_player(game);
+	//load_player(game);
 }
+
 void load_player(t_game *game)
 {
 		int i;
@@ -53,6 +55,7 @@ void load_player(t_game *game)
 				i++;
 		}
 }
+
 mlx_image_t *convert_texture_to_image(void *mlx, mlx_texture_t *texture)
 {
 	mlx_image_t *image = mlx_texture_to_image(mlx, texture);

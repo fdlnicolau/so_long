@@ -29,84 +29,104 @@ int parsing(t_game *game, char *argv)
 	return (0);
 }
 
-void ft_error(const char *msg)
+void check_walls(t_game *game)
 {
-    perror(msg);
-    exit(EXIT_FAILURE);
+	int	i;
+	size_t	j;
+
+	j = 0;
+	i = 0;
+
+	while ( j < ft_strlen(game->map[0]))
+	{
+		if (game->map[0][j] != '1' || game->map[game->hgt - 1][j] != '1')
+			ft_error("Ocurrió un error");
+		j++;
+	}
+
+	while( i < game->hgt)
+	{
+		if (game->map[i][0] != '1' || game->map[i][j - 1] != '1')
+			ft_error("Ocurrió un error");
+		i++;
+	}
 }
-/*int get_map_dimensions(t_game *game, char *argv)
+void check_components(t_game *game)
 {
-    int fd;
-    char *current_line;
-    int read_result;
+	int i;
+	int j;
+	char valid_chars[] = "10CEP";
 
-    fd = open(argv, O_RDONLY);
-    if(fd == -1)
-        error(&game, "Error opening file");
-    
-    game_state->map_width = 0;
-    game_state->map_height = 0;
-    game_state->screen_width = 0;
-    game_state->screen_height = 0;
 
-    while((read_result = get_next_line(fd, &current_line)) > 0)
-    {
-        game_state->map_height++;
-        if(game_state->map_width < ft_strlen(current_line))
-            game_state->map_width = ft_strlen(current_line);
-        free(current_line);
-    }
-    if(read_result == -1)
-        error(&game, "Error reading file");
-
-    game_state->screen_width = game_state->map_width * TILE_SIZE;
-    game_state->screen_height = game_state->map_height * TILE_SIZE;
-
-    close(fd);
-    return (0);
-}
-
-int allocate_map_memory(t_game *game)
-{
-    int index;
-
-    game->map = (char **)malloc(sizeof(char *) * game->map_height);
-    if(game->map == NULL)
-        error(&game, "Error allocating memory");
-        return (0);
-    index = 0;
-    while(index < game->map_height)
-    {
-        game->map[index] = (char *)malloc(sizeof(char) * game->map_width + 1);
-        if(game->map[index] == NULL)
-        {
-            error(&game, "Error allocating memory");
-            free_map(game);
-            return(0);
-        }
-        index++;
-    }
-    game->map_to_free = 1;
-    return (1);
+	i = 0;
+	while (game->map[i] != NULL)
+	{
+		j = 0;
+		while (game->map[i][j] != '\0')
+		{
+			if (game->map[i][j] != '\0' && ft_strchr(valid_chars, game->map[i][j]) == NULL)
+				ft_error("Ocurrió un error");
+			j++;
+		}
+		i++;
+	}
+	if (count_comp(game->map, 'P') != 1)
+		ft_error("Ocurrió un error");
+	if(count_comp(game->map, 'E') != 1)
+		ft_error("Ocurrió un error");
+	if(count_comp(game->map, 'C') == 0)
+		ft_error("Ocurrió un error");
 }
 
-int verification_ber(char *str. t_game game)
+void check_rect_map(t_game *game)
 {
-    int i;
+	int i;
+	int j;
+	int len;
 
-    i = 0;
-    while(str[i] != '\0')
-        i++;
-    if(str[i - 4] == '.' && str[i - 3] == 'b' 
-        && str[i - 2] == 'e' && str[i - 1] == 'r')
-    {
-        i = open(str, O_RDONLY);
-        if(i == -1)
-            error(&game, "Error opening file");
-        else
-            close(i);
-        return (0);
-    }
-    error(&game, "Invalid file extension, use .ber!");
-    return (1);
-} */
+	i = 0;
+	len = ft_strlen(game->map[0]);
+	if(ft_strlen(game->map[0]) < 3)
+		ft_error("Ocurrió un error");
+	while (game->map[i] != NULL)
+	{
+		j = 0;
+		while (game->map[i][j] != '\0')
+			j++;
+		if (j != len)
+			ft_error("Bad line length");
+		i++;
+	}
+	if(i < 3)
+		ft_error("Map too small");
+	game->wth = len;
+	game->hgt = i;
+}
+
+int **start_check_path(t_game *game, int i, int j)
+{
+	int **visit;
+	visit = init_visit(game->hgt, game->wth);
+
+	while(i < game->hgt)
+	{
+		j = 0;
+		while(j < game->wth)
+		{
+			if (game->map[i][j] == 'P')
+				check_path(game, i, j, visit);
+			j++;
+		}
+		i++;
+	}
+	if (!game->exit)
+		ft_error("Ocurrió un error");
+		
+	i = 0;
+	while(i < game->hgt)
+	{
+		free(visit[i]);
+		i++;
+	}
+	return(visit);
+}

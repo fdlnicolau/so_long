@@ -15,7 +15,8 @@ SRC_FILES   =   main.c \
 				parsing.c\
 				init_game.c\
 				key_hook.c\
-				move.c
+				move.c\
+				parsing2.c
 
 
 OBJ			=	$(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))

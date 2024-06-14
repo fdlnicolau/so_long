@@ -14,16 +14,16 @@
 
 int map_size(int fd)
 {
-    char *line;
-    int size;
+	char *line;
+	int size;
 
-    size = 0;
-    while((line = get_next_line(fd)) != NULL)
-    {
-        size++;
-        free(line);
-    }
-    return (size);
+	size = 0;
+	while((line = get_next_line(fd)) != NULL)
+	{
+		size++;
+		free(line);
+	}
+	return (size);
 }
 
 void read_map(t_game *game, char *str)
@@ -41,6 +41,7 @@ void read_map(t_game *game, char *str)
 	close(fd);
 	parsing(game, str);
 }
+
 char *reading(int fd, t_game *game)
 {
 	char *line;
@@ -89,8 +90,8 @@ void copy_line(t_game *game, char *line, int i)
 	game->map[i] = malloc(sizeof(char) * (strlen(line) + 1));
 	if (!game->map[i])
 	{
-    	perror("Failed to allocate memory for game->map[i]");
-    	exit(EXIT_FAILURE);
+		perror("Failed to allocate memory for game->map[i]");
+		exit(EXIT_FAILURE);
 	}
 	while (line[j] != '\0' && line[j] != '\n' && line[j] != '\r')
 	{
@@ -99,6 +100,7 @@ void copy_line(t_game *game, char *line, int i)
 	}
 	game->map[i][j] = '\0';
 }
+
 void check_map_content(t_game *game, char cell, int i, int j) 
 {
 if (cell == 'P')
@@ -133,158 +135,7 @@ void preparation_map(t_game *game)
 	game->map = malloc(sizeof(char *) * (game->hgt + 1));
 	if (!game->map)
 	{
-	    perror("Failed to allocate memory for map");
-    	exit(EXIT_FAILURE);
-	}
-}
-//Comprueba si el mapa es rectangular
-void check_rect_map(t_game *game)
-{
-	int i;
-	int j;
-	int len;
-
-	i = 0;
-	len = ft_strlen(game->map[0]);
-	if(ft_strlen(game->map[0]) < 3)
-		ft_error("Ocurrió un error");
-	while (game->map[i] != NULL)
-	{
-		j = 0;
-		while (game->map[i][j] != '\0')
-			j++;
-		if (j != len)
-			ft_error("Bad line length");
-		i++;
-	}
-	if(i < 3)
-		ft_error("Map too small");
-	game->wth = len;
-	game->hgt = i;
-}
-
-//Comprueba si el mapa contiene los componentes necesarios
-void check_components(t_game *game)
-{
-	int i;
-	int j;
-	char valid_chars[] = "10CEP";
-
-
-	i = 0;
-	while (game->map[i] != NULL)
-	{
-		j = 0;
-		while (game->map[i][j] != '\0')
-		{
-			if (game->map[i][j] != '\0' && ft_strchr(valid_chars, game->map[i][j]) == NULL)
-				ft_error("Ocurrió un error");
-			j++;
-		}
-		i++;
-	}
-	if (count_comp(game->map, 'P') != 1)
-		ft_error("Ocurrió un error");
-	if(count_comp(game->map, 'E') != 1)
-		ft_error("Ocurrió un error");
-	if(count_comp(game->map, 'C') == 0)
-		ft_error("Ocurrió un error");
-}
-
-void check_walls(t_game *game)
-{
-	int	i;
-	size_t	j;
-
-	j = 0;
-	i = 0;
-
-	while ( j < ft_strlen(game->map[0]))
-	{
-		if (game->map[0][j] != '1' || game->map[game->hgt - 1][j] != '1')
-			ft_error("Ocurrió un error");
-		j++;
-	}
-
-	while( i < game->hgt)
-	{
-		if (game->map[i][0] != '1' || game->map[i][j - 1] != '1')
-			ft_error("Ocurrió un error");
-		i++;
-	}
-}
-
-int **start_check_path(t_game *game, int i, int j)
-{
-	int **visit;
-	visit = init_visit(game->hgt, game->wth);
-
-	while(i < game->hgt)
-	{
-		j = 0;
-		while(j < game->wth)
-		{
-			if (game->map[i][j] == 'P')
-				check_path(game, i, j, visit);
-			j++;
-		}
-		i++;
-	}
-	if (!game->exit)
-		ft_error("Ocurrió un error");
-		
-	i = 0;
-	while(i < game->hgt)
-	{
-		free(visit[i]);
-		i++;
-	}
-	return(visit);
-}
-
-void check_path(t_game *game, int i, int j, int **visit)//flufli
-{
-	if (i < 0 || i >= game->hgt || j < 0 || j >= game->wth
-		|| visit[i][j] || game->map[i][j] == '1')
-		return;
-
-	visit[i][j] = 1;
-	if (game->map[i][j] == '1')
-        return;
-
-    // Si la posición actual es el punto de salida, marcar que se encontró un camino y retornar
-	if (game->map[i][j] == 'E')
-	{
-		game->exit = 1;
-		return;
-	}
-
-    // Continuar la búsqueda en las posiciones adyacentes
-	check_path(game, i - 1, j, visit); // arriba
-	check_path(game, i + 1, j, visit); // abajo
-	check_path(game, i, j - 1, visit); // izquierda
-	check_path(game, i, j + 1, visit); // derecha
-}
-
-
-void check_collectibles(t_game *game, int **visit)
-{
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	while(i < game->hgt)
-	{
-		j = 0;
-		while(j < game->wth)
-		{
-			if (game->map[i][j] == 'C' && visit[i][j] == 1)
-			{
-				game->collectibles--;
-			}
-			j++;
-		}
-		i++;
+		perror("Failed to allocate memory for map");
+		exit(EXIT_FAILURE);
 	}
 }
