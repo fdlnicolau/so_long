@@ -32,10 +32,18 @@ void read_map(t_game *game, char *str)
 
 	fd = open(str, O_RDONLY);
 	if (fd == -1)
+	{
 		ft_error("Error opening file");
+		exit(EXIT_FAILURE);
+	}
 	game->hgt = map_size(fd);
 	close(fd);
 	fd = open(str, O_RDONLY);
+	if (fd == -1)
+	{
+		ft_error("Error opening file");
+		exit(EXIT_FAILURE);
+	}
 	preparation_map(game);
 	reading(fd, game);
 	close(fd);
@@ -84,21 +92,18 @@ void check_status(t_game *game)
 
 void copy_line(t_game *game, char *line, int i)
 {
-	int j;
+    int len = strlen(line);
+	int j = 0;
 
-	j = 0;
-	game->map[i] = malloc(sizeof(char) * (strlen(line) + 1));
-	if (!game->map[i])
-	{
-		perror("Failed to allocate memory for game->map[i]");
-		exit(EXIT_FAILURE);
-	}
-	while (line[j] != '\0' && line[j] != '\n' && line[j] != '\r')
-	{
-		game->map[i][j] = line[j];
-		j++;
-	}
-	game->map[i][j] = '\0';
+    game->map[i] = malloc(sizeof(char) * (len + 1));
+    if (!game->map[i])
+    {
+        perror("Failed to allocate memory for game->map[i]");
+        exit(EXIT_FAILURE);
+    }
+	if (line[j] != '\0' && line[j] != '\n' && line[j] != '\r')
+    	strcpy(game->map[i], line);
+	game->map[i][len] = '\0';
 }
 
 void check_map_content(t_game *game, char cell, int i, int j) 
@@ -125,7 +130,7 @@ if (cell == 'P')
 		else
 			ft_error("Multiple exits found");
 	}
-	else if (cell != '1' && cell != '0' && cell != '\n' && cell != '\r' && cell != '\0') // Validación adicional de celdas
+	else if (cell != '1' && cell != '0' && cell != '\n' && cell != '\r' && cell != '\0')
 		ft_error("Unexpected cell character");
 }
 
@@ -138,4 +143,5 @@ void preparation_map(t_game *game)
 		perror("Failed to allocate memory for map");
 		exit(EXIT_FAILURE);
 	}
+	ft_memset(game->map, 0, sizeof(char *) * (game->hgt + 1));
 }

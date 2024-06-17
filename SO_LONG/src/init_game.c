@@ -14,13 +14,14 @@
 
 void game_control(t_game *game)
 {
-	game->mlx = mlx_init(game->wth * 64, game->hgt * 64, "so_long", false);
+	game->wth = ft_strlen(game->map[0]);
+	game->mlx = mlx_init(game->wth * S, game->hgt * S, "so_long", false);
 	if(game->mlx == NULL)
 			ft_error("mlx_init failed");
 	load_image(game);
+	mlx_image_to_window(game->mlx, game->player_img, game->player_ps[0] * S, game->player_ps[1] * S);
 	mlx_key_hook(game->mlx, &init_key_hook, game);
 	mlx_loop(game->mlx);
-	
 }
 
 void load_image(t_game *game)
@@ -28,66 +29,35 @@ void load_image(t_game *game)
 	load_png(game);
 	texture_to_img(game);
 	img_to_window(game);
-	//load_player(game);
-}
-
-void load_player(t_game *game)
-{
-		int i;
-		int j;
-		mlx_image_t *image;
-
-		i = 0;
-		while(i < game->hgt)
-		{
-				j = 0;
-				while(j < game->wth)
-				{
-						if(game->map[i][j] == 'P')
-						{
-								game->player_y = i;
-								game->player_x = j;
-								image = convert_texture_to_image(game->mlx, game->player_tex);
-								mlx_image_to_window(game->mlx, image, j * 64, i * 64);
-						}
-						j++;
-				}
-				i++;
-		}
-}
-
-mlx_image_t *convert_texture_to_image(void *mlx, mlx_texture_t *texture)
-{
-	mlx_image_t *image = mlx_texture_to_image(mlx, texture);
-	if (!image)
-		ft_error("Error converting texture to image");
-	return image;
 }
 
 void img_to_window(t_game *game)
 {
-	int i;
-	int j;
+    int	i;
+    int	j;
 
-	i = 0;
-	while (i < game->hgt)
-	{
-		j = 0;
-		while (j < game->wth)
-		{
-			if (game->map[i][j] == '1')
-				mlx_image_to_window(game->mlx, game->wall_img, j * 64, i * 64);
-			else if (game->map[i][j] == '0')
-				mlx_image_to_window(game->mlx, game->floor_img, j * 64, i * 64);
-			else if (game->map[i][j] == 'C')
-				mlx_image_to_window(game->mlx, game->collect_img, j * 64, i * 64);
-			else if (game->map[i][j] == 'E')
-				mlx_image_to_window(game->mlx, game->exit_img, j * 64, i * 64);
-			j++;
-		}
-		i++;
-	}
+    i = -1;
+    while (++i <= game->hgt - 1)
+    {
+        j = -1;
+        while (++j <= game->wth - 1) 
+        {
+            mlx_image_to_window(game->mlx, game->floor_img, j * S, i * S);
+            if (game->map[i][j] == '1')
+                mlx_image_to_window(game->mlx, game->wall_img, j * S, i * S);
+            else if (game->map[i][j] == 'C' && game->collect_img != NULL)
+                mlx_image_to_window(game->mlx, game->collect_img, j * S, i * S);
+            else if (game->map[i][j] == 'P')
+            {
+                game->player_ps[1] = i;
+                game->player_ps[0] = j;
+            }
+            else if (game->map[i][j] == 'E')
+                mlx_image_to_window(game->mlx, game->exit_img, j * S, i * S);
+        }
+    }
 }
+
 
 void load_png(t_game *game)
 {
@@ -121,35 +91,31 @@ void texture_to_img(t_game *game)
 void game_init(t_game *game)
 {
 	game->map = NULL;
-	game->rows = 0;
-	game->cols = 0;
 	game->players = 0;
 	game->exit = 0;
 	game->collectibles = 0;
 	game->hgt = 0;
 	game->wth = 0;
-	game->map_to_free = NULL;
-	game->player_y = 0;
+	game->window = NULL;
 	game->player_x = 0;
+	game->player_y = 0;
 	game->floor_tex = NULL;
-	game->exit_tex = NULL;
-	game->player_tex = NULL;
 	game->wall_tex = NULL;
-	game->collect_tex = NULL;
+	game->collectible_tex = NULL;
+	game->player_tex = NULL;
+	game->exit_tex = NULL;
+	game->collect_text = NULL;
 	game->floor_img = NULL;
 	game->exit_img = NULL;
 	game->player_img = NULL;
 	game->wall_img = NULL;
 	game->collect_img = NULL;
-	game->floor_height = 0;
-	game->floor_width = 0;
-	game->exit_height = 0;
-	game->exit_width = 0;
-	game->player_height = 0;
-	game->player_width = 0;
-	game->wall_height = 0;
-	game->wall_width = 0;
-	game->collect_height = 0;
-	game->collect_width = 0;
+	game->player_ps[0] = 0;
+	game->player_ps[1] = 0;
 	game->mlx = NULL;
+	game->collect_tex = NULL;
+	game->steps = 0;
+	game->str = NULL;
+	game->temp = NULL;
+	game->player_exit = 0;
 }

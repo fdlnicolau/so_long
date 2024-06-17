@@ -21,7 +21,8 @@ int parsing(t_game *game, char *argv)
 	(void)argv;
 	i = 0;
 	j = 0;
-	check_rect_map(game);
+	visit = NULL;
+	//check_rect_map(game);
 	check_components(game);
 	check_walls(game);
 	visit = start_check_path(game, i, j);
@@ -32,22 +33,34 @@ int parsing(t_game *game, char *argv)
 void check_walls(t_game *game)
 {
 	int	i;
-	size_t	j;
+	int	j;
 
 	j = 0;
 	i = 0;
 
-	while ( j < ft_strlen(game->map[0]))
-	{
-		if (game->map[0][j] != '1' || game->map[game->hgt - 1][j] != '1')
-			ft_error("Ocurrió un error");
-		j++;
-	}
+	while (j < game->wth)
+    {
+        if (game->map[0][j] != '1')
+            ft_error("Top wall check failed");
+        j++;
+    }
+
+    j = 0;
+    while (j < game->wth)
+    {
+        if (game->map[game->hgt - 1][j] != '1')
+            ft_error("Bottom wall check failed");
+        j++;
+    }
 
 	while( i < game->hgt)
 	{
-		if (game->map[i][0] != '1' || game->map[i][j - 1] != '1')
-			ft_error("Ocurrió un error");
+		if (game->map[i][0] != '1')
+            ft_error("Left wall check failed");
+		
+		j = game->wth;
+        if (game->map[i][j] != '1')
+            ft_error("Right wall check failed");
 		i++;
 	}
 }
@@ -55,7 +68,7 @@ void check_components(t_game *game)
 {
 	int i;
 	int j;
-	char valid_chars[] = "10CEP";
+	char valid_chars[] = "10CEP\r\n";
 
 
 	i = 0;
@@ -65,17 +78,17 @@ void check_components(t_game *game)
 		while (game->map[i][j] != '\0')
 		{
 			if (game->map[i][j] != '\0' && ft_strchr(valid_chars, game->map[i][j]) == NULL)
-				ft_error("Ocurrió un error");
+				ft_error("invalid character in map");
 			j++;
 		}
 		i++;
 	}
 	if (count_comp(game->map, 'P') != 1)
-		ft_error("Ocurrió un error");
+		ft_error("Ocurrió un error con el jugador");
 	if(count_comp(game->map, 'E') != 1)
-		ft_error("Ocurrió un error");
+		ft_error("Ocurrió un error con la salida");
 	if(count_comp(game->map, 'C') == 0)
-		ft_error("Ocurrió un error");
+		ft_error("Ocurrió un error con los colectables");
 }
 
 void check_rect_map(t_game *game)
@@ -86,8 +99,6 @@ void check_rect_map(t_game *game)
 
 	i = 0;
 	len = ft_strlen(game->map[0]);
-	if(ft_strlen(game->map[0]) < 3)
-		ft_error("Ocurrió un error");
 	while (game->map[i] != NULL)
 	{
 		j = 0;
@@ -128,5 +139,6 @@ int **start_check_path(t_game *game, int i, int j)
 		free(visit[i]);
 		i++;
 	}
+	free(visit);
 	return(visit);
 }

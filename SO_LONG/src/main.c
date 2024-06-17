@@ -22,8 +22,8 @@ int main(int argc, char **argv)
 		check_map(argv[1], &game);
 		game_control(&game);
 	}
-	free_game(&game);
-	return (0);
+	ft_exit_free(END_OF_PROGRAM, &game);
+	return (EXIT_SUCCESS);
 }
 
 t_game *game_memory_init(t_game **game)

@@ -15,7 +15,6 @@ SRC_FILES   =   main.c \
 				parsing.c\
 				init_game.c\
 				key_hook.c\
-				move.c\
 				parsing2.c
 
 

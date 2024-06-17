@@ -9,6 +9,7 @@
 /*   Updated: 2024/05/25 17:12:42 by lnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
@@ -24,10 +25,12 @@
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
-#define S 64
-#define EXTENSION_NO_BER -1
-#define MAP_NOT_CORRECT -3
-#define END_OF_PROGRAM 0
+
+# define S 64
+//REVISAR CONTROL DE ERRORES
+# define EXTENSION_NO_BER -1
+# define END_OF_PROGRAM	-2
+# define MAP_NOT_CORRECT -3
 
 
 #define UP 0
@@ -38,14 +41,11 @@
 typedef struct s_game
 {
 	char **map;
-	int rows;
-	int cols;
 	int players;
 	int exit;
 	int collectibles;
 	int hgt;
-	int wth; 
-	void *map_to_free; 
+	int wth;
 	void *window;
 	int player_x;
 	int player_y;
@@ -59,26 +59,21 @@ typedef struct s_game
 	mlx_image_t *exit_img;
 	mlx_image_t *player_img;
 	mlx_image_t *wall_img;
-	mlx_image_t *collect_img;
-	int floor_height;
-	int floor_width;
-	int exit_height;
-	int exit_width;
-	int player_height;
-	int player_width;
+	mlx_image_t *collect_img;;
 	int player_ps[2];
-	int player_exit;
-	int wall_height;
-	int wall_width;
-	int collect_height;
-	int collect_width;
 	mlx_t *mlx;
 	mlx_texture_t *collect_tex;
 	int steps;
 	mlx_image_t *str;
 	char *temp;
+	int player_exit;
 } t_game;
 
+void   ft_delete(t_game *g);
+void ft_exit_free(int nb_error, t_game *game);
+void	update_window(t_game *g);
+void	ft_where_is(t_game *g);
+void free_visit_matrix(int **visit, int rows);
 void close_window(t_game *game);
 void game_loop(t_game *game);
 void render_game_state(t_game *game);
@@ -89,8 +84,6 @@ void right_left_key(mlx_key_data_t keydata, t_game *g);
 void up_down_key(mlx_key_data_t keydata, t_game *g);
 void pos_player(t_game *g);
 void free_map(t_game *game);
-void	calculate_new_position(t_game *game, int direction, int	*new_x, int	*new_y);
-void	update_player_position(t_game *game, int new_x, int new_y);
 void	move_player(t_game *game, int direction);
 void render_game_state(t_game *game);
 void ft_clean_image(t_game *game);
